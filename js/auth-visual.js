@@ -1,14 +1,11 @@
-// --- Firebase v10 ---
+// js/auth-visual.js  (MÓDULO)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { 
-  getAuth, 
-  onAuthStateChanged, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// --- Configuración Firebase ---
+import { initLoginUI, showLoggedIn, showLoggedOut } from "./ui-login.js";
+
+// --- Config Firebase ---
 const firebaseConfig = {
   apiKey: "AIzaSyBya-ZCpikAFuu2_8Oziz3vdS9taDcrFAk",
   authDomain: "taller-ies.firebaseapp.com",
@@ -19,99 +16,48 @@ const firebaseConfig = {
   measurementId: "G-DEC9QECYH0"
 };
 
-// --- Inicializar Firebase ---
-const app = initializeApp(firebaseConfig);
+const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// --- Referencias DOM ---
-const mainContent = document.querySelector("main");
-const authSection = document.getElementById("auth");
-const userBar = document.getElementById("userBar");
-const userEmailSpan = document.getElementById("userEmail");
-const estadoUsuario = document.getElementById("estadoUsuario");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const btnRegistrar = document.getElementById("btnRegistrar");
-const btnLogin = document.getElementById("btnLogin");
-const btnLogout = document.getElementById("btnLogout");
+// DOM (solo para botones/campos)
+const emailInput   = document.getElementById("email");
+const passInput    = document.getElementById("password");
+const btnReg       = document.getElementById("btnRegistrar");
+const btnLogin     = document.getElementById("btnLogin");
+const btnLogout    = document.getElementById("btnLogout");
 const btnLogoutTop = document.getElementById("btnLogoutTop");
+const estado       = document.getElementById("estadoUsuario");
 
-// --- Estado inicial seguro ---
-document.addEventListener("DOMContentLoaded", () => {
-  mainContent.style.display = "none";
-  userBar.style.display = "none";
-  authSection.style.display = "block";
-});
+// Estado inicial de UI
+initLoginUI();
 
-// --- Función de cierre de sesión ---
-async function cerrarSesion() {
-  await signOut(auth);
-  authSection.style.display = "block";
-  userBar.style.display = "none";
-  mainContent.style.display = "none";
-  estadoUsuario.textContent = "👋 Sesión cerrada.";
-}
-
-// --- Registro de usuario ---
-btnRegistrar?.addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-
-  // Solo permitir correos de educa.madrid.org
-  if (!email.endsWith("@educa.madrid.org")) {
-    estadoUsuario.textContent = "⚠️ Solo se permiten correos @educa.madrid.org";
-    return;
-  }
-
+// Eventos
+btnReg?.addEventListener("click", async () => {
   try {
-    await createUserWithEmailAndPassword(auth, email, password);
-    estadoUsuario.textContent = "✅ Usuario registrado correctamente.";
-  } catch (error) {
-    estadoUsuario.textContent = "⚠️ " + error.message;
+    await createUserWithEmailAndPassword(auth, emailInput.value.trim(), passInput.value.trim());
+    estado.textContent = "✅ Usuario registrado correctamente.";
+  } catch (e) {
+    estado.textContent = "⚠️ " + e.message;
   }
 });
 
-// --- Inicio de sesión ---
 btnLogin?.addEventListener("click", async () => {
   try {
-    await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value.trim());
-  } catch (error) {
-    estadoUsuario.textContent = "⚠️ " + error.message;
+    await signInWithEmailAndPassword(auth, emailInput.value.trim(), passInput.value.trim());
+  } catch (e) {
+    estado.textContent = "⚠️ " + e.message;
   }
 });
 
-// --- Cierre de sesión desde botones ---
-btnLogout?.addEventListener("click", cerrarSesion);
-btnLogoutTop?.addEventListener("click", cerrarSesion);
+async function doLogout() { await signOut(auth); }
+btnLogout?.addEventListener("click", doLogout);
+btnLogoutTop?.addEventListener("click", doLogout);
 
-// --- Cambios de sesión ---
+// Sesión
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log("✅ Usuario autenticado:", user.email);
-
-    // Mostrar la barra superior con el correo del usuario
-    userBar.style.display = "flex";
-    userEmailSpan.textContent = user.email || "";
-
-    // Mostrar el contenido principal
-    mainContent.style.display = "block";
-
-    // Ocultar completamente el acceso al taller (login y registro)
-    authSection.style.display = "none";
-
-    estadoUsuario.textContent = "Conectado como " + user.email;
-
+    showLoggedIn(user.email || "");
   } else {
-    console.log("🔒 Usuario no autenticado");
-
-    // Mostrar solo el login
-    authSection.style.display = "block";
-
-    // Ocultar contenido y barra
-    mainContent.style.display = "none";
-    userBar.style.display = "none";
-
-    estadoUsuario.textContent = "No conectado";
+    showLoggedOut();
   }
 });
-

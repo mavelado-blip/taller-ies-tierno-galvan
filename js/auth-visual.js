@@ -21,6 +21,7 @@ const firebaseConfig = {
   measurementId: "G-DEC9QECYH0"
 };
 
+// --- Inicializar Firebase ---
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -38,12 +39,21 @@ const btnLogin = document.getElementById("btnLogin");
 const btnLogout = document.getElementById("btnLogout");
 const btnLogoutTop = document.getElementById("btnLogoutTop");
 
-// Estado inicial
+// --- Estado inicial ---
 mainContent.style.display = "none";
 userBar.style.display = "none";
 authSection.style.display = "flex";
 
-// --- Registro / Login ---
+// --- Funciones ---
+async function cerrarSesion() {
+  await signOut(auth);
+  authSection.style.display = "block";
+  userBar.style.display = "none";
+  mainContent.style.display = "none";
+  estadoUsuario.textContent = "👋 Sesión cerrada.";
+}
+
+// --- Eventos de botones ---
 btnRegistrar?.addEventListener("click", async () => {
   try {
     await createUserWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value.trim());
@@ -61,10 +71,6 @@ btnLogin?.addEventListener("click", async () => {
   }
 });
 
-// --- Cierre de sesión ---
-async function cerrarSesion() {
-  await signOut(auth);
-}
 btnLogout?.addEventListener("click", cerrarSesion);
 btnLogoutTop?.addEventListener("click", cerrarSesion);
 
@@ -73,32 +79,21 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("✅ Usuario autenticado:", user.email);
 
-    // Mostrar la barra superior con el correo del usuario
+    // Mostrar contenido principal y barra de usuario
     mainContent.style.display = "block";
     userBar.style.display = "flex";
     userEmailSpan.textContent = user.email || "";
 
-    // Ocultar completamente el acceso al taller
+    // Ocultar formulario de login
     authSection.style.display = "none";
-
+    estadoUsuario.textContent = "Conectado como " + user.email;
   } else {
     console.log("🔒 Usuario no autenticado");
 
-    // Ocultar todo excepto el login
+    // Mostrar login, ocultar todo lo demás
     mainContent.style.display = "none";
     userBar.style.display = "none";
     authSection.style.display = "block";
+    estadoUsuario.textContent = "No conectado";
   }
 });
-
-// Botón para cerrar sesión
-async function cerrarSesion() {
-  await signOut(auth);
-  authSection.style.display = "block";
-  userBar.style.display = "none";
-  mainContent.style.display = "none";
-}
-
-btnLogout?.addEventListener("click", cerrarSesion);
-btnLogoutTop?.addEventListener("click", cerrarSesion);
-

@@ -89,21 +89,29 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("✅ Usuario autenticado:", user.email);
 
-    // Mostrar contenido principal y barra de usuario
-    mainContent.style.display = "block";
+    // Mostrar la barra superior con el correo del usuario
     userBar.style.display = "flex";
     userEmailSpan.textContent = user.email || "";
 
-    // Ocultar formulario de login
+    // Mostrar el contenido principal
+    mainContent.style.display = "block";
+
+    // Ocultar completamente el acceso al taller (login y registro)
     authSection.style.display = "none";
+
     estadoUsuario.textContent = "Conectado como " + user.email;
+
   } else {
     console.log("🔒 Usuario no autenticado");
 
-    // Mostrar solo login
+    // Mostrar solo el login
+    authSection.style.display = "block";
+
+    // Ocultar contenido y barra
     mainContent.style.display = "none";
     userBar.style.display = "none";
-    authSection.style.display = "block";
+
     estadoUsuario.textContent = "No conectado";
   }
 });
+

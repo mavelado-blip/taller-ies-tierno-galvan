@@ -206,5 +206,6 @@ main section.active {
 }
  /* Asegurar que el formulario de autenticación SIEMPRE sea visible */
 #auth {
-  display: block !important;
+  display: none;
 }
+

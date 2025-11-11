@@ -1,0 +1,42 @@
+[
+  {
+    "vin": "ABC1234XYZ",
+    "pieza": "Filtro de aceite",
+    "proveedor": "Oscaro",
+    "marca": "Bosch",
+    "referencia": "0451103316",
+    "precio": 12.90,
+    "imagen": "https://cdn.autodoc.de/uploads/produit_photo/4182117.jpeg",
+    "enlace": "https://www.oscaro.es/filtro-de-aceite-bosch-0451103316"
+  },
+  {
+    "vin": "ABC1234XYZ",
+    "pieza": "Filtro de aire",
+    "proveedor": "Autodoc",
+    "marca": "MANN",
+    "referencia": "C30130",
+    "precio": 10.50,
+    "imagen": "https://cdn.autodoc.de/uploads/produit_photo/10427456.jpeg",
+    "enlace": "https://www.autodoc.es/mann-filter/10427456"
+  },
+  {
+    "vin": "ABC1234XYZ",
+    "pieza": "Pastillas de freno",
+    "proveedor": "Oscaro",
+    "marca": "Brembo",
+    "referencia": "P59047",
+    "precio": 35.00,
+    "imagen": "https://cdn.autodoc.de/uploads/produit_photo/4865416.jpeg",
+    "enlace": "https://www.oscaro.es/pastillas-de-freno-brembo-4865416"
+  },
+  {
+    "vin": "ABC1234XYZ",
+    "pieza": "Filtro de combustible",
+    "proveedor": "Autodoc",
+    "marca": "Bosch",
+    "referencia": "N4235",
+    "precio": 18.20,
+    "imagen": "https://cdn.autodoc.de/uploads/produit_photo/8899547.jpeg",
+    "enlace": "https://www.autodoc.es/bosch/8899547"
+  }
+]

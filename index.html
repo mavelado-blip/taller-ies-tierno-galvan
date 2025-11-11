@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taller IES Tierno Galván</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+   <img src="assets/logo.png" alt="Logo IES Tierno Galván" style="height:60px;">
+    <h1>Taller IES Tierno Galván</h1>
+  </header>
+
+<!-- BARRA SUPERIOR DE USUARIO -->
+<div id="userBar" style="display:none; background:#003a8c; color:white; padding:8px 20px; font-weight:bold; display:flex; align-items:center; justify-content:space-between;">
+  <span id="userInfo">🔐 Sesión iniciada como: <span id="userEmail"></span></span>
+  <button id="btnLogoutTop" title="Cerrar sesión" style="background:none; border:none; color:white; font-size:18px; cursor:pointer;">
+    ⏻
+  </button>
+</div>
+
+
+<nav>
+  <a onclick="mostrarSeccion('inicio')">Inicio</a>
+  <a onclick="mostrarSeccion('clientes')">Clientes</a>
+  <a onclick="mostrarSeccion('vehiculos')">Vehículos</a>
+  <a onclick="mostrarSeccion('reparaciones')">Reparaciones</a>
+  <a onclick="mostrarSeccion('informes')">Informes</a>
+  <a onclick="mostrarSeccion('recambios')">Recambios</a>
+  <a onclick="mostrarSeccion('presupuesto')">Presupuesto</a>
+  <a onclick="mostrarSeccion('observaciones')">Observaciones</a>
+</nav>
+
+<!-- ✅ Bloque de autenticación visible -->
+<section id="auth" style="margin:20px; padding:10px; border:1px solid #ccc; width:fit-content;">
+  <h2>Acceso al Taller</h2>
+  <input type="email" id="email" placeholder="Correo electrónico">
+  <input type="password" id="password" placeholder="Contraseña">
+  <button id="btnRegistrar">Registrar</button>
+  <button id="btnLogin">Iniciar sesión</button>
+  <button id="btnLogout">Cerrar sesión</button>
+  <p id="estadoUsuario">No conectado</p>
+</section>
+
+<hr>
+
+
+
+   <main>
+    <section id="inicio" class="active">
+  <h2>Bienvenido al Taller del IES Tierno Galván</h2>
+  <p>Selecciona una opción del menú para comenzar la recepción.</p>
+
+  <h3>Datos del Taller</h3>
+  <form id="formEmpresa">
+    <input id="nombreEmpresa" placeholder="Nombre del taller" required>
+    <input id="cifEmpresa" placeholder="CIF" required>
+    <input id="direccionEmpresa" placeholder="Dirección">
+    <input id="telefonoEmpresa" placeholder="Teléfono">
+    <input id="correoEmpresa" type="email" placeholder="Correo electrónico">
+    <button type="button" onclick="guardarEmpresa()">Guardar datos</button>
+  </form>
+
+  <div id="datosEmpresaGuardados" style="margin-top:10px; padding:10px; border:1px solid #ccc; border-radius:8px;">
+    <p><b>Nombre:</b> <span id="empNombre"></span></p>
+    <p><b>CIF:</b> <span id="empCif"></span></p>
+    <p><b>Dirección:</b> <span id="empDireccion"></span></p>
+    <p><b>Teléfono:</b> <span id="empTelefono"></span></p>
+    <p><b>Correo:</b> <span id="empCorreo"></span></p>
+  </div>
+
+  <hr>
+
+  <h3>Gestión de Técnicos</h3>
+  <form id="formTecnico">
+    <input id="nombreTecnico" placeholder="Nombre del técnico" required>
+    <label for="tipoTecnico">Tipo de mano de obra:</label>
+    <select id="tipoTecnico" required>
+      <option value="">-- Selecciona tipo --</option>
+      <option value="pintor">Pintor</option>
+      <option value="chapista">Chapista</option>
+      <option value="mecanico">Mecánico</option>
+      <option value="montador">Montador</option>
+    </select>
+
+    <input id="precioHora" type="number" step="0.01" placeholder="Precio hora (€)" required>
+    <button type="button" onclick="guardarTecnico()">Guardar técnico</button>
+  </form>
+
+  <h4>Lista de técnicos</h4>
+  <table id="tablaTecnicos">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Especialidad</th>
+        <th>Precio/hora (€)</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+
+    <!-- CLIENTES -->
+    <section id="clientes">
+      <h2>Gestión de Clientes</h2>
+      <form id="formClientes">
+        <input type="text" id="nombreCliente" placeholder="Nombre del cliente" required><br>
+        <input type="email" id="correoCliente" placeholder="Correo electrónico"><br>
+        <input type="tel" id="telefonoCliente" placeholder="Teléfono"><br>
+        <input type="text" id="direccionCliente" placeholder="Dirección"><br>
+        <input type="text" id="dniCliente" placeholder="DNI"><br>
+        <button type="button" onclick="guardarCliente()">Guardar cliente</button>
+      </form>
+
+      <h3>Lista de clientes</h3>
+      <table class="table mt-4" id="tablaClientes">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Correo electrónico</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
+            <th>DNI</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+    <!-- VEHÍCULOS -->
+    <section id="vehiculos">
+      <h2>Gestión de Vehículos</h2>
+      <form id="formVehiculo">
+    <label for="clienteAsociado">Cliente asociado:</label>
+    <select id="clienteAsociado" required></select>
+
+    <input id="vin" placeholder="VIN" required>
+    <input id="matricula" placeholder="Matrícula" required>
+    <input id="marca" placeholder="Marca">
+    <input id="modelo" placeholder="Modelo">
+
+    <button type="button" onclick="guardarVehiculo()">Guardar vehículo</button> 
+      </form>
+
+      <h3>Lista de vehículos</h3>
+      <table class="table mt-4" id="tablaVehiculos">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>VIN</th>
+        <th>Matrícula</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+      </table>
+    </section>
+
+<!-- REPARACIONES / MANTENIMIENTO -->
+<section id="reparaciones">
+  <h2>Gestión de Reparaciones</h2>
+
+  <form id="formReparacion">
+    <label for="vehiculoAsociado">Vehículo asociado:</label>
+    <select id="vehiculoAsociado" required></select>
+ 
+    <label for="tipoMantenimiento">Tipo de mantenimiento:</label>
+  <select id="tipoMantenimiento" required>
+    <option value="">-- Selecciona tipo --</option>
+    <option value="preventivo">Preventivo</option>
+    <option value="correctivo">Correctivo</option>
+    <option value="sustitucion">Sustitución de piezas</option>
+    <option value="revision">Revisión general</option>
+  </select>
+
+    <input id="fechaEntrada" type="date" required>
+    <input id="descripcion" placeholder="Descripción de la reparación" required>
+    <input id="coste" type="number" step="0.01" placeholder="Coste (€)" required>
+
+    <button type="button" onclick="guardarReparacion()">Guardar reparación</button>
+  </form>
+
+  <h3>Lista de reparaciones</h3>
+  <table id="tablaReparaciones">
+    <thead>
+      <tr>
+        <th>Vehículo</th>
+        <th>Tipo</th>
+        <th>Fecha</th>
+        <th>Descripción</th>
+        <th>Coste (€)</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<!-- INFORMES -->
+<section id="informes">
+  <h2>Generar Informe de Mantenimiento</h2>
+
+  <form id="formInforme">
+    <label for="vehiculoInforme">Selecciona vehículo:</label>
+    <select id="vehiculoInforme" required></select>
+
+    <label for="tipoMantenimientoInforme">Tipo de mantenimiento:</label>
+    <select id="tipoMantenimientoInforme" required>
+      <option value="">-- Selecciona tipo --</option>
+      <option value="preventivo">Preventivo</option>
+      <option value="correctivo">Correctivo</option>
+      <option value="sustitucion">Sustitución de piezas</option>
+      <option value="revision">Revisión general</option>
+    </select>
+
+    <div id="detallesMantenimiento">
+      <!-- Aquí se mostrarán los campos personalizados según el tipo -->
+    </div>
+
+    <label for="tecnicoAsignado">Técnico asignado:</label>
+    <select id="tecnicoAsignado" required></select>
+    
+    <label for="horasTrabajo">Horas de trabajo:</label>
+    <input id="horasTrabajo" type="number" step="0.1" min="0" placeholder="Ej. 2.5">
+
+
+    <button type="button" onclick="generarInforme()">Generar informe</button>
+  </form>
+
+  <h3>Informes generados</h3>
+  <table id="tablaInformes">
+    <thead>
+      <tr>
+        <th>Vehículo</th>
+        <th>Tipo</th>
+        <th>Técnico</th>
+        <th>Horas</th>
+        <th>Coste (€)</th>
+        <th>Detalles</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<!-- RECAMBIOS -->
+<section id="recambios">
+  <h2>Búsqueda de Recambios</h2>
+
+  <form id="formRecambios">
+    <label for="vehiculoRecambio">Selecciona vehículo:</label>
+    <select id="vehiculoRecambio" required></select>
+
+    <label for="nombrePieza">Nombre de la pieza:</label>
+    <input id="nombrePieza" type="text" placeholder="Ej. Filtro de aire" required>
+
+    <button type="button" onclick="buscarRecambios()">Buscar recambios</button>
+  </form>
+
+  <h3>Resultados de búsqueda</h3>
+  <table id="tablaRecambios">
+<thead>
+  <tr>
+    <th>Seleccionar</th>
+    <th>Proveedor</th>
+    <th>Pieza</th>
+    <th>Imagen</th>
+    <th>Precio (€)</th>
+    <th>Enlace</th>
+  </tr>
+</thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<!-- PRESUPUESTO -->
+<section id="presupuesto">
+  <h2>Presupuesto del Cliente</h2>
+
+  <div class="acciones-presupuesto">
+    <button type="button" onclick="mostrarPresupuesto()">Actualizar presupuesto</button>
+    <button type="button" onclick="exportarPresupuestoPDF()">Exportar a PDF</button>
+  </div>
+
+  <!-- Resumen rápido en pantalla -->
+  <div id="resumenPresupuesto"></div>
+
+  <!-- Documento imprimible / PDF (lo rellena JS) -->
+  <div id="presupuestoImprimible" class="doc"></div>
+</section>
+
+
+
+</main>
+
+<!-- Autenticación visual -->
+<script type="module" src="js/auth-visual.js"></script>
+
+<script type="module" src="js/db.js"></script>
+<script type="module" src="js/firestore-user.js"></script>
+
+
+<!-- Resto de scripts -->
+<script src="js/main.js"></script>
+<script src="js/clientes.js"></script>
+<script src="js/vehiculos.js"></script>
+<script src="js/mantenimiento.js"></script>
+<script src="js/tecnicos.js"></script>
+<script src="js/informes.js"></script>
+<script src="js/recambios.js"></script>
+<script src="js/presupuesto.js"></script>
+
+<!-- Librería para generar PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
+</body>
+
+
+</html>
+

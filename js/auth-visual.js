@@ -71,16 +71,34 @@ btnLogoutTop?.addEventListener("click", cerrarSesion);
 // --- Escuchar cambios de sesión ---
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // 🔹 Usuario autenticado
+    console.log("✅ Usuario autenticado:", user.email);
+
+    // Mostrar la barra superior con el correo del usuario
     mainContent.style.display = "block";
     userBar.style.display = "flex";
+    userEmailSpan.textContent = user.email || "";
+
+    // Ocultar completamente el acceso al taller
     authSection.style.display = "none";
-    userEmailSpan.textContent = user.email;
+
   } else {
-    // 🔹 Sin sesión
+    console.log("🔒 Usuario no autenticado");
+
+    // Ocultar todo excepto el login
     mainContent.style.display = "none";
     userBar.style.display = "none";
-    authSection.style.display = "flex";
-    estadoUsuario.textContent = "No conectado";
+    authSection.style.display = "block";
   }
 });
+
+// Botón para cerrar sesión
+async function cerrarSesion() {
+  await signOut(auth);
+  authSection.style.display = "block";
+  userBar.style.display = "none";
+  mainContent.style.display = "none";
+}
+
+btnLogout?.addEventListener("click", cerrarSesion);
+btnLogoutTop?.addEventListener("click", cerrarSesion);
+

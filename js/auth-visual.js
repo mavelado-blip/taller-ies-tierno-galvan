@@ -33,13 +33,24 @@ initLoginUI();
 
 // Eventos
 btnReg?.addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  const pass  = passInput.value.trim();
+
+  // 🔒 Solo permitir correos del dominio educa.madrid.org
+  const dominioPermitido = "@educa.madrid.org";
+  if (!email.endsWith(dominioPermitido)) {
+    estado.textContent = "❌ Solo se permiten correos del dominio " + dominioPermitido;
+    return;
+  }
+
   try {
-    await createUserWithEmailAndPassword(auth, emailInput.value.trim(), passInput.value.trim());
+    await createUserWithEmailAndPassword(auth, email, pass);
     estado.textContent = "✅ Usuario registrado correctamente.";
   } catch (e) {
     estado.textContent = "⚠️ " + e.message;
   }
 });
+
 
 btnLogin?.addEventListener("click", async () => {
   try {

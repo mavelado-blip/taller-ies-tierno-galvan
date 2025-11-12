@@ -1,3 +1,4 @@
+// js/clientes.js
 import { guardarDatosUsuario } from "./firestore-user.js";
 
 /***** CLIENTES *****/
@@ -5,7 +6,7 @@ let clientes = JSON.parse(localStorage.getItem("clientes") || "[]");
 const formClientes = document.querySelector("#formClientes");
 const tablaClientes = document.querySelector("#tablaClientes tbody");
 
-window.guardarCliente = function () {
+window.guardarCliente = async function () {
   const nombre = document.querySelector("#nombreCliente").value.trim();
   const correo = document.querySelector("#correoCliente").value.trim();
   const telefono = document.querySelector("#telefonoCliente").value.trim();
@@ -14,15 +15,19 @@ window.guardarCliente = function () {
 
   if (!nombre) { alert("Escribe al menos el nombre."); return; }
 
-    const cliente = { nombre, correo, telefono, direccion, dni };
+  const cliente = { nombre, correo, telefono, direccion, dni };
 
   // 🔹 Guardar localmente
   clientes.push(cliente);
   localStorage.setItem("clientes", JSON.stringify(clientes));
 
   // 🔹 Guardar también en Firestore (base de datos online)
-guardarDatosUsuario({ clientes });
-
+  try {
+    await guardarDatosUsuario({ clientes });
+    console.log("✅ Clientes guardados en Firestore");
+  } catch (error) {
+    console.error("❌ Error al guardar en Firestore:", error);
+  }
 
   actualizarTablaClientes();
   if (formClientes) formClientes.reset();

@@ -1,4 +1,4 @@
-import { guardarClienteFirestore } from "./firestore-user.js";
+import { guardarDatosUsuario } from "./firestore-user.js";
 
 /***** CLIENTES *****/
 let clientes = JSON.parse(localStorage.getItem("clientes") || "[]");
@@ -21,7 +21,7 @@ window.guardarCliente = function () {
   localStorage.setItem("clientes", JSON.stringify(clientes));
 
   // 🔹 Guardar también en Firestore (base de datos online)
-  guardarClienteFirestore(cliente);
+guardarDatosUsuario({ clientes });
 
 
   actualizarTablaClientes();

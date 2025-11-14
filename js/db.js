@@ -1,9 +1,8 @@
-// ✅ Conexión a Firebase Firestore
+// js/db.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where } 
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Configuración del proyecto (igual que tu index.html)
+// Configuración Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBya-ZCpikAFuu2_8Oziz3vdS9taDcrFAk",
   authDomain: "taller-ies.firebaseapp.com",
@@ -14,9 +13,6 @@ const firebaseConfig = {
   measurementId: "G-DEC9QECYH0"
 };
 
-// Inicializa la app y la base de datos
+// Inicializar Firebase + Firestore
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// 🟢 Exporta la conexión para usarla en otros archivos
-export { db, collection, addDoc, getDocs, query, where };
+export const db = getFirestore(app);

@@ -1,5 +1,5 @@
 // js/clientes.js
-import { guardarDatosUsuario } from "./firestore-user.js";
+import { guardarClienteFirestore } from "./firestore-user.js";
 
 /***** CLIENTES *****/
 let clientes = JSON.parse(localStorage.getItem("clientes") || "[]");
@@ -21,10 +21,10 @@ window.guardarCliente = async function () {
   clientes.push(cliente);
   localStorage.setItem("clientes", JSON.stringify(clientes));
 
-  // 🔹 Guardar también en Firestore (base de datos online)
+  // 🔹 Guardar también en Firestore (subcolección del usuario)
   try {
-    await guardarDatosUsuario({ clientes });
-    console.log("✅ Clientes guardados en Firestore");
+    await guardarClienteFirestore(cliente);
+    console.log("✅ Cliente guardado en Firestore");
   } catch (error) {
     console.error("❌ Error al guardar en Firestore:", error);
   }
